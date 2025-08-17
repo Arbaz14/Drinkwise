@@ -69,6 +69,14 @@ export default function SettingsScreen() {
     setGoalModalVisible(false);
   };
 
+  const deleteMessage = (index: number) => {
+    const newMessages = state.reminderSettings.customMessages.filter((_, i) => i !== index);
+    dispatch({
+      type: 'UPDATE_REMINDER_SETTINGS',
+      settings: { customMessages: newMessages }
+    });
+  };
+
   const formatTime = (hour: number) => {
     return hour.toString().padStart(2, '0') + ':00';
   };
@@ -95,7 +103,7 @@ export default function SettingsScreen() {
         {/* Goal Settings */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Daily Goal</Text>
-          
+
           <View style={styles.settingCard}>
             <View style={styles.settingHeader}>
               <Target size={24} color="#4A90E2" />
@@ -112,8 +120,8 @@ export default function SettingsScreen() {
                 style={styles.editButton}
                 onPress={() => {
                   setCustomGoal(
-                    (state.unit === 'oz' 
-                      ? convertAmount(state.dailyGoal, 'ml', 'oz') 
+                    (state.unit === 'oz'
+                      ? convertAmount(state.dailyGoal, 'ml', 'oz')
                       : state.dailyGoal
                     ).toString()
                   );
@@ -152,7 +160,7 @@ export default function SettingsScreen() {
         {/* Reminder Settings */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Reminders</Text>
-          
+
           <View style={styles.settingCard}>
             <View style={styles.settingHeader}>
               <Bell size={24} color="#4A90E2" />
@@ -262,7 +270,10 @@ export default function SettingsScreen() {
               <Text style={styles.messageText} numberOfLines={2}>
                 {message}
               </Text>
-              <TouchableOpacity style={styles.deleteButton}>
+              <TouchableOpacity 
+                style={styles.deleteButton}
+                onPress={() => deleteMessage(index)}
+              >
                 <Trash2 size={16} color="#FF6B6B" />
               </TouchableOpacity>
             </View>
@@ -284,7 +295,7 @@ export default function SettingsScreen() {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Set Daily Goal</Text>
-            
+
             {state.userProfile.weight && (
               <TouchableOpacity
                 style={styles.recommendedButton}
@@ -295,7 +306,7 @@ export default function SettingsScreen() {
                 </Text>
               </TouchableOpacity>
             )}
-            
+
             <TextInput
               style={styles.goalInput}
               value={customGoal}
@@ -304,7 +315,7 @@ export default function SettingsScreen() {
               keyboardType="numeric"
               autoFocus
             />
-            
+
             <View style={styles.modalButtons}>
               <TouchableOpacity
                 style={styles.modalButton}
@@ -335,7 +346,7 @@ export default function SettingsScreen() {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Reminder Interval</Text>
-            
+
             <View style={styles.presetOptions}>
               {presetIntervals.map((preset) => (
                 <TouchableOpacity
@@ -361,7 +372,7 @@ export default function SettingsScreen() {
                 </TouchableOpacity>
               ))}
             </View>
-            
+
             <Text style={styles.customLabel}>Or set custom interval:</Text>
             <TextInput
               style={styles.goalInput}
@@ -370,7 +381,7 @@ export default function SettingsScreen() {
               placeholder="Minutes (15-240)"
               keyboardType="numeric"
             />
-            
+
             <View style={styles.modalButtons}>
               <TouchableOpacity
                 style={styles.modalButton}
